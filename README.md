@@ -9,7 +9,7 @@ Here’s a **clean, polished README.md** version of your CS50 Birthday Buddy pro
 **edX username:** ED_2505_KSIR  
 **Author:** Eric E. Dickson  
 
-**Video Demo:** [https://youtu.be/t3i8usHy3nM](https://youtu.be/t3i8usHy3nM)
+**Video Demo:** https://youtu.be/t3i8usHy3nM
 
 ---
 
