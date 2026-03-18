@@ -1,0 +1,47 @@
+{% extends "layout.html" %} {% block main %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card shadow-sm p-4 border-0">
+      <h3 class="mb-4 text-center">Update Birthday</h3>
+      <form method="post">
+        <div class="mb-3">
+          <label>Name</label>
+          <input
+            name="name"
+            class="form-control"
+            value="{{ birthday.name }}"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label>Month (1-12)</label>
+          <input
+            name="month"
+            type="number"
+            class="form-control"
+            value="{{ birthday.month }}"
+            min="1"
+            max="12"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label>Day (1-31)</label>
+          <input
+            name="day"
+            type="number"
+            class="form-control"
+            value="{{ birthday.day }}"
+            min="1"
+            max="31"
+            required
+          />
+        </div>
+        <button type="submit" class="btn btn-success w-100">
+          Save Changes
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

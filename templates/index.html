@@ -1,0 +1,99 @@
+{% extends "layout.html" %}
+
+{% block main %}
+{% set month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"] %}
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card p-3 shadow-sm border-0">
+            <h5>Add New Birthday</h5>
+            <form action="{{ url_for('add_birthday') }}" method="post">
+                <input name="name" class="form-control mb-2" placeholder="Name" required>
+                <select name="month" class="form-select mb-2" required>
+                    <option value="" disabled selected>Select Month</option>
+                    {% for m in range(1, 13) %}
+                        <option value="{{ m }}">{{ month_names[m-1] }}</option>
+                    {% endfor %}
+                </select>
+                <input name="day" type="number" class="form-control mb-2" placeholder="Day (1-31)" min="1" max="31" required>
+                <button type="submit" class="btn btn-primary w-100">Add</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3>Upcoming</h3>
+            <form action="/" method="get" class="d-flex">
+                <select name="month" class="form-select form-select-sm me-2">
+                    <option value="">All Months</option>
+                    {% for m in range(1, 13) %}
+                        <option value="{{ m }}" {% if request.args.get('month')|int == m %}selected{% endif %}>{{ month_names[m-1] }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="btn btn-sm btn-outline-secondary">Filter</button>
+            </form>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-striped table-hover bg-white shadow-sm align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Name</th>
+                        <th>Date</th>
+                        <th>Countdown</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for b in birthdays %}
+                    <tr>
+                        <td><strong>{{ b.name }}</strong></td>
+                        <td>{{ month_names[b.month - 1] }} {{ b.day }}</td>
+                        <td>
+                            {% if b.days_until == 0 %}
+                                <span class="badge bg-success">🎉 Today!</span>
+                            {% elif b.days_until <= 7 %}
+                                <span class="badge bg-warning text-dark">In {{ b.days_until }} days</span>
+                            {% else %}
+                                <span class="text-muted small">In {{ b.days_until }} days</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            <a href="{{ url_for('edit', id=b.id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                            
+                            <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ b.id }}">
+                                Delete
+                            </button>
+
+                            <div class="modal fade" id="deleteModal{{ b.id }}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content text-start">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            Are you sure you want to delete the birthday for <strong>{{ b.name }}</strong>?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                            <form action="{{ url_for('delete') }}" method="post" class="d-inline">
+                                                <input type="hidden" name="id" value="{{ b.id }}">
+                                                <button type="submit" class="btn btn-danger">Delete Permanently</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="4" class="text-center py-4">No birthdays found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
