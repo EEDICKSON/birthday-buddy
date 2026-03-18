@@ -88,14 +88,13 @@ def register():
         db.session.add(new_user)
         db.session.commit()
 
-        session["user_id"] = new_user.id
-        flash("Registration successful: Welcome to Birthday Buddy!")
-        return redirect(url_for("index"))
+        return redirect(url_for("login"))
 
     return render_template("register.html")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    session.clear()
     if request.method == "POST":
         # Normalize input to match database storage
         username = request.form.get("username", "").lower().strip()
